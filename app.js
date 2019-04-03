@@ -6,10 +6,14 @@ var logger = require('morgan');
 var expressSession = require('express-session');
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(expressSession);
+var flash = require('req-flash');
+
 
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var homeRouter = require('./routes/home');
+var forgotPass = require('./routes/forgot');
+var resetPass = require('./routes/reset');
 
 var app = express();
 
@@ -18,7 +22,9 @@ mongoose.Promise = global.Promise;
 
 app.use(expressSession({
   secret: 'Sh! Key',
-  store: new MongoStore({url: 'mongodb://localhost:27017/forgotpass'}),
+  store: new MongoStore({
+    url: 'mongodb://localhost:27017/forgotpass'
+  }),
   resave: false,
   saveUninitialized: false
 }));
@@ -28,21 +34,26 @@ app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(flash());
 
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/home', homeRouter);
+app.use('/forgot', forgotPass);
+app.use('/reset', resetPass);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
