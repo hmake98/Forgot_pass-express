@@ -34,10 +34,10 @@ router.post('/submit', (req, res) => {
                     message: "No email id found! Please enter valid email"
                 });
             } else {
-                crypto.randomBytes(20, async function (err, buf) {
+                crypto.randomBytes(20, function (err, buf) {
                     let token = buf.toString('hex');
                     //console.log("Before: "+user);
-                    await User.update({_id: user[0]._id}, {
+                    User.update({_id: user[0]._id}, {
                         $set: {
                             resetToken: token,
                             resetExpire: Date.now() + 3600000
@@ -48,7 +48,7 @@ router.post('/submit', (req, res) => {
                         if (err) {
                             console.log(err);
                         } else {
-                            readHTMLFile(path.join(__dirname, '../public/emailmsg.hbs'), async function(err, html) {
+                            readHTMLFile(path.join(__dirname, '../public/emailmsg.hbs'), function(err, html) {
                                 var template = Handlebars.compile(html);
                                 let transporter = nodemailer.createTransport({
                                     service: 'gmail',
@@ -69,8 +69,7 @@ router.post('/submit', (req, res) => {
                                     })
                                 };
 
-                                await transporter.sendMail(mailOptions, (err, info) => {
-                                    console.log("Hey")
+                                transporter.sendMail(mailOptions, (err, info) => {
                                     if (err) {
                                         console.log(err)
                                     }
