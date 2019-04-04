@@ -30,6 +30,7 @@ npm start
 
 * [ExpressJs](https://expressjs.com/) - The web framework used
 * [Mongoose](https://mongoosejs.com/) - Elegant mongodb object modeling for node.js
+* [Nodemailer](https://nodemailer.com/) - Node.js applications to allow easy as cake email sending
 * [Bootstrap](https://getbootstrap.com/) - CSS framework
 
 ## License
