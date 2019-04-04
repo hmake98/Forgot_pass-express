@@ -62,13 +62,13 @@ router.post('/submit', (req, res) => {
                                 let transporter = nodemailer.createTransport({
                                     service: 'gmail',
                                     auth: {
-                                        user: 'rcbrcb13',
-                                        pass: 'simple.123'
+                                        user: '--- YOUR EMAIL ---',
+                                        pass: '--- YOUR PASSWORD ---'
                                     }
                                 });
 
                                 let mailOptions = {
-                                    from: 'rcbrcb13@gmail.com',
+                                    from: '----YOUR EMAIL----',
                                     to: user[0].email,
                                     subject: "Password reset",
                                     html: template({
