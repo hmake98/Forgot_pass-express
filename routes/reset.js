@@ -63,23 +63,23 @@ router.post('/submit', (req, res) => {
                     } else {
                         User.findOne({
                             resetToken: req.body.token
-                        }).then(usera => {
+                        }).then(user => {
                             readHTMLFile(path.join(__dirname, '../public/emailsuccess.hbs'), function (err, html) {
                                 var template = Handlebars.compile(html);
                                 let transporter = nodemailer.createTransport({
                                     service: 'gmail',
                                     auth: {
-                                        user: 'rcbrcb13',
-                                        pass: 'simple.123'
+                                        user: '--- YOUR EMAIL ---',
+                                        pass: '--- YOUR PASSWORD ---'
                                     }
                                 });
 
                                 let mailOptions = {
                                     from: 'rcbrcb13@gmail.com',
-                                    to: usera[0].email,
+                                    to: user.email,
                                     subject: "Password reset",
                                     html: template({
-                                        username: usera[0].username,
+                                        username: user.username,
                                         message: "Your Password is successfully changed!"
                                     })
                                 };
