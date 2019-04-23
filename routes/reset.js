@@ -22,15 +22,22 @@ var readHTMLFile = function (path, callback) {
 router.get('/:token', function (req, res, next) {
     if (req.params.token) {
         token = req.params.token;
-        User.find({
+        User.findOne({
             resetToken: req.params.token
         }).then(user => {
             if (!user) {
                 res.redirect('/forgot');
             } else {
-                res.render('reset', {
-                    token: req.params.token
-                });
+                if (parseInt(Date.now()) - parseInt(user['resetExpire']) > 600000) {
+                    res.json({
+                        success: false,
+                        message: "Token expired! LOL"
+                    });
+                } else {
+                    res.render('reset', {
+                        token: req.params.token
+                    });
+                }
             }
         })
     }
@@ -54,9 +61,9 @@ router.post('/submit', (req, res) => {
                     if (err) {
                         console.log(err);
                     } else {
-                        User.find({
+                        User.findOne({
                             resetToken: req.body.token
-                        }).then(user => {
+                        }).then(usera => {
                             readHTMLFile(path.join(__dirname, '../public/emailsuccess.hbs'), function (err, html) {
                                 var template = Handlebars.compile(html);
                                 let transporter = nodemailer.createTransport({
@@ -69,10 +76,10 @@ router.post('/submit', (req, res) => {
 
                                 let mailOptions = {
                                     from: 'rcbrcb13@gmail.com',
-                                    to: user[0].email,
+                                    to: usera[0].email,
                                     subject: "Password reset",
                                     html: template({
-                                        username: user[0].username,
+                                        username: usera[0].username,
                                         message: "Your Password is successfully changed!"
                                     })
                                 };

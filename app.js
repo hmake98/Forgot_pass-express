@@ -17,7 +17,7 @@ var resetPass = require('./routes/reset');
 
 var app = express();
 
-mongoose.connect('mongodb://localhost:27017/forgotpass');
+mongoose.connect('mongodb://localhost:27017/forgotpass', { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 
 app.use(expressSession({

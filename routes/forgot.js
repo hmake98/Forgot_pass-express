@@ -40,7 +40,7 @@ router.post('/submit', (req, res) => {
                     User.update({_id: user[0]._id}, {
                         $set: {
                             resetToken: token,
-                            resetExpire: Date.now() + 3600000
+                            resetExpire: Date.now()
                         }
                     }, {
                         new: true
